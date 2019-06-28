@@ -1,0 +1,44 @@
+Ausgangsmodel:
+model = Sequential()
+model.add(Flatten(input_shape=X_train.shape[1:]))
+model.add(Dense(512, activation='relu'))
+model.add(Dropout(0.2))
+model.add(Dense(512, activation='relu'))
+model.add(Dropout(0.2))
+model.add(Dense(10, activation='softmax'))
+Test: 98.25%
+Val: 98%
+Early stopping beobachtet, da das beste Modell schon nach 5-6 Epochen da war. Wenn man sich den kleinsten Validation Loss anschaut, dann trifft man gut den Punkt, an dem das Overfitting minimal ist, also den besten Kompromiss zwischen Test- und Trainingsloss.
+Mit Dropout: Delta Loss= 0.05 beim besten Modell 
+Ohne DropOut-Layer: auch ca. 0.05 beim besten Modell, aber je mehr Epochen desto größer der Loss Unterschied d.h. das Overfitting nimmt zu.
+
+
+Kleinstes mögliches Model:
+model = Sequential()
+model.add(Flatten(input_shape=X_train.shape[1:]))
+model.add(Dense(10, activation='softmax'))
+Test: 92.56%
+Val: 92.95%
+Fast kein Unterschied zwischen training loss und validation loss, dafür aber auch etwas geringere Accuracy und höherer Loss
+
+
+Ein hidden Layer:
+model = Sequential()
+model.add(Flatten(input_shape=X_train.shape[1:]))
+model.add(Dense(512, activation='relu'))
+model.add(Dropout(0.2))
+model.add(Dense(10, activation='softmax'))
+Test: 98.1%
+Val: 98.08%
+Starker Validation loss aber weniger unterschied als beim vollen Modell
+
+Entfernung von ReLu verringert die Accuracy etwas ca. 6%
+
+Entfernung des Pre-Processing sorgt für einen immensen Einbruch der Accuracy (vorher ca. 98.2% nachher 37.8% )
+
+sgd als optimizer erfordert mehr Training als rmsprob
+
+kleinere Batch size --> mehr Rechenaufwand, da mehr Gradient Updates, allerdings ergibt das nicht unbedingt einen besseren Lernerfolg
+
+Offene Fragen:
+- Wie kann es sein, dass der Validation loss minimal ist, aber die Accuracy nicht?
