@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<title>README.html</title>
+
+</head>
+
+<body>
+
+<h1>Content: Unsupervised Learning</h1>
+
+<h2>Project: Creating Customer Segments</h2>
+
+<h3>Install</h3>
+
+<p>This project requires <strong>Python 2.7</strong> and the following Python libraries installed:</p>
+
+<ul>
+<li><a href="http://www.numpy.org/">NumPy</a></li>
+<li><a href="http://pandas.pydata.org">Pandas</a></li>
+<li><a href="http://matplotlib.org/">matplotlib</a></li>
+<li><a href="http://scikit-learn.org/stable/">scikit-learn</a></li>
+</ul>
+
+
+<p>You will also need to have software installed to run and execute a <a href="http://ipython.org/notebook.html">Jupyter Notebook</a></p>
+
+<p>If you do not have Python installed yet, it is highly recommended that you install the <a href="http://continuum.io/downloads">Anaconda</a> distribution of Python, which already has the above packages and more included. Make sure that you select the Python 2.7 installer and not the Python 3.x installer.</p>
+
+<h3>Code</h3>
+
+<p>Template code is provided in the <code>customer_segments.ipynb</code> notebook file. You will also be required to use the included <code>visuals.py</code> Python file and the <code>customers.csv</code> dataset file to complete your work. While some code has already been implemented to get you started, you will need to implement additional functionality when requested to successfully complete the project. Note that the code included in <code>visuals.py</code> is meant to be used out-of-the-box and not intended for students to manipulate. If you are interested in how the visualizations are created in the notebook, please feel free to explore this Python file.</p>
+
+<h3>Run</h3>
+
+<p>In a terminal or command window, navigate to the top-level project directory <code>customer_segments/</code> (that contains this README) and run one of the following commands:</p>
+
+<p><code>bash
+ipython notebook customer_segments.ipynb
+</code><br/>
+or
+<code>bash
+jupyter notebook customer_segments.ipynb
+</code></p>
+
+<p>This will open the Jupyter Notebook software and project file in your browser.</p>
+
+<h2>Data</h2>
+
+<p>The customer segments data is included as a selection of 440 data points collected on data found from clients of a wholesale distributor in Lisbon, Portugal. More information can be found on the <a href="https://archive.ics.uci.edu/ml/datasets/Wholesale+customers">UCI Machine Learning Repository</a>.</p>
+
+<p>Note (m.u.) is shorthand for <em>monetary units</em>.</p>
+
+<p><strong>Features</strong>
+1) <code>Fresh</code>: annual spending (m.u.) on fresh products (Continuous);
+2) <code>Milk</code>: annual spending (m.u.) on milk products (Continuous);
+3) <code>Grocery</code>: annual spending (m.u.) on grocery products (Continuous);
+4) <code>Frozen</code>: annual spending (m.u.) on frozen products (Continuous);
+5) <code>Detergents_Paper</code>: annual spending (m.u.) on detergents and paper products (Continuous);
+6) <code>Delicatessen</code>: annual spending (m.u.) on and delicatessen products (Continuous);
+7) <code>Channel</code>: {Hotel/Restaurant/Cafe - 1, Retail - 2} (Nominal)
+8) <code>Region</code>: {Lisbon - 1, Oporto - 2, or Other - 3} (Nominal)</p>
+
+</body>
+</html>
