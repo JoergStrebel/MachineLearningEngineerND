@@ -1,0 +1,12 @@
+ 
+jstrebel@ashes:~/devel/udacity/openai_gym> source bin/activate
+
+(openai_gym) jstrebel@ashes:~/devel/udacity/openai_gym/gym> python examples/agents/random_agent.py 
+# should work
+
+# Make Jupyter work with virtualenv:
+$ python -m venv projectname
+$ source projectname/bin/activate
+(venv) $ pip install ipykernel
+(venv) $ ipython kernel install --user --name=projectname
+
