@@ -27,12 +27,19 @@ class Task():
         self.target_pos = target_pos if target_pos is not None else np.array([0., 0., 10.]) 
 
     def get_reward(self):
-        """Uses current pose of sim to return reward."""
+        """
+        Uses current pose of sim to return reward.
+        The function implements a reward function based on the Euclidean distance (L2 norm),
+        however it is normalied to the interval [-1.0 ... 1.0] to make it easier to learn.
+        """
+        #TODO: reward normalization
         reward = 1.-.3*(abs(self.sim.pose[:3] - self.target_pos)).sum()
+
         return reward
 
     def step(self, rotor_speeds):
         """Uses action to obtain next state, reward, done."""
+        # TODO: input clipping
         reward = 0
         pose_all = []
         for _ in range(self.action_repeat):

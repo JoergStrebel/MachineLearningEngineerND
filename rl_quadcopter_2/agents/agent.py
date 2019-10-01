@@ -1,8 +1,9 @@
 import numpy as np
-from task import Task
-
+from agents.actor import Actor
+from agents.critic import Critic
 
 class Pilot_Agent():
+    """Reinforcement Learning agent that learns using DDPG."""
     def __init__(self, task):
         #the constructor does not return any value
         # Task (environment) information
@@ -16,6 +17,14 @@ class Pilot_Agent():
         # Score tracker and learning parameters
         self.best_w = None
         self.best_score = -np.inf
+
+        # Actor (Policy) Model
+        self.actor_local = Actor(self.state_size, self.action_size, self.action_low, self.action_high)
+        self.actor_target = Actor(self.state_size, self.action_size, self.action_low, self.action_high)
+
+        # Critic (Value) Model
+        self.critic_local = Critic(self.state_size, self.action_size)
+        self.critic_target = Critic(self.state_size, self.action_size)
 
         # Episode variables
         self.reset_episode()
