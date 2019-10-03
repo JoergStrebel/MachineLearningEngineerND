@@ -30,16 +30,14 @@ class Task():
         """
         Uses current pose of sim to return reward.
         The function implements a reward function based on the Euclidean distance (L2 norm),
-        however it is normalied to the interval [-1.0 ... 1.0] to make it easier to learn.
+        however it is mapped to the interval [-1.0 ... 1.0] using tanh() to make it easier to learn.
         """
-        #TODO: reward normalization
-        reward = 1.-.3*(abs(self.sim.pose[:3] - self.target_pos)).sum()
-
+        l2norm = np.sqrt(np.sum(np.square(self.sim.pose[:3] - self.target_pos)))
+        reward = -2.0*np.tanh(0.1*l2norm)+1.0
         return reward
 
     def step(self, rotor_speeds):
         """Uses action to obtain next state, reward, done."""
-        # TODO: input clipping
         reward = 0
         pose_all = []
         for _ in range(self.action_repeat):
