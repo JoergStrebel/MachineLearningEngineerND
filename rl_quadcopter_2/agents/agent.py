@@ -29,9 +29,9 @@ class Pilot_Agent():
         self.actor_target.model.set_weights(self.actor_local.model.get_weights())
 
         # Noise process
-        self.exploration_mu = 0
-        self.exploration_theta = 0.15
-        self.exploration_sigma = 0.2
+        self.exploration_mu = 0.0
+        self.exploration_theta = 0.1
+        self.exploration_sigma = 0.1
         self.noise = OUNoise(self.action_size, self.exploration_mu, self.exploration_theta, self.exploration_sigma)
 
         # Replay memory
@@ -40,8 +40,8 @@ class Pilot_Agent():
         self.memory = ReplayBuffer(self.buffer_size, self.batch_size)
 
         # Algorithm parameters
-        self.gamma = 0.99  # discount factor
-        self.tau = 0.01  # for soft update of target parameters
+        self.gamma = 0.8  # discount factor
+        self.tau = 0.05  # for soft update of target parameters
 
         # Episode variables
         self.last_state = None
@@ -64,12 +64,18 @@ class Pilot_Agent():
 
         # Roll over last state and action
         self.last_state = next_state
+        return self.memory.lenbuf()
 
     def act(self, state):
-        """Returns actions for given state(s) as per current policy."""
+        """
+        Returns actions for given state(s) as per current policy.
+        Attention: it establishes a bottom level for rotor speeds, it avoids rotor speed values of <1
+        """
         state = np.reshape(state, [-1, self.state_size])
         action = self.actor_local.model.predict(state)[0]
-        return list(action + self.noise.sample())  # add some noise for exploration
+        learned_action=action + self.noise.sample() # add some noise for exploration
+        min_action=np.ones(learned_action.shape)
+        return list(np.maximum(learned_action,min_action))  # make sure we have >0 rotor speed values
 
     def learn(self, experiences):
         """Update policy and value parameters using given batch of experience tuples."""

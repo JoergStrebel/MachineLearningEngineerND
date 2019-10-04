@@ -33,8 +33,22 @@ class Task():
         however it is mapped to the interval [-1.0 ... 1.0] using tanh() to make it easier to learn.
         """
         l2norm = np.sqrt(np.sum(np.square(self.sim.pose[:3] - self.target_pos)))
-        reward = -2.0*np.tanh(0.1*l2norm)+1.0
-        return reward
+        #reward_distance = -2.0 * np.tanh(0.1 * l2norm) + 1.0
+        reward_distance = -l2norm/10
+        angles=[]
+        for index in range(len(self.sim.pose[3:])):
+            x=self.sim.pose[index]
+            if x>np.pi:
+                angles.append(x-2*np.pi)
+            else:
+                 angles.append(x)
+        npangles = np.array(angles)
+        #reward_tilt=np.amin(-2.0*np.tanh(np.abs(4.0*npangles))+1) #penalizes poses that are too tilted
+        reward_tilt=-np.sum(np.abs(npangles))
+
+        basic_reward=1.0 #you get at least 1 if the quadcopter manages to stay in the air
+
+        return basic_reward+(reward_tilt+reward_distance)/2
 
     def step(self, rotor_speeds):
         """Uses action to obtain next state, reward, done."""

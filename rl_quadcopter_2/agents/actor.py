@@ -61,5 +61,4 @@ class Actor:
             outputs=[],
             updates=updates_op)
 
-        self.model.compile(optimizer=optimizer, loss=loss)
 
