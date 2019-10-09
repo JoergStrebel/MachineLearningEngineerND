@@ -30,35 +30,18 @@ class Task():
         """
         Uses current pose of sim to return reward.
         """
-        # you get at least a basic reward if the quadcopter manages to stay in the air
-        #basic_reward = 1.0
-
         # This part of the reward function is based on the Euclidean distance (L2 norm)
         #l2norm = np.sqrt(np.sum(np.square(self.sim.pose[:3] - self.target_pos)))
         #reward_distance = -2.0 * np.tanh(0.1 * l2norm)
         # reward_distance = -l2norm/5
 
-        # This part of the reward function is based on the tilt of the quadcopter
-        #angles = []
-        #for index in range(len(self.sim.pose[3:])):
-         #   x = self.sim.pose[index]
-         #   if x > np.pi:
-         #       angles.append(x - 2 * np.pi)
-         #   else:
-         #       angles.append(x).sum()
-        #npangles = np.array(angles)
-        # reward_tilt=np.amin(-2.0*np.tanh(np.abs(4.0*npangles))+1) #penalizes poses that are too tilted
-        #reward_tilt = -np.sum(self.sim.pose[3:])
-
-        # This part of the reward function is based on the angular velocity of the quadcopter
-        #reward_angv = -np.sum(np.abs(self.sim.angular_v))
-        #reward = 1.0 - 0.3*(abs(self.sim.pose[:3] - self.target_pos)).sum()
+        # This part of the reward function is based on the L1 norm
         distance=np.sum(abs(self.sim.pose[:3] - self.target_pos))
 
-        #if l2norm<0.5:
-        #    reward=10
-        #else:
-        reward = np.tanh(1 - 0.003*(distance))
+        if distance<3:
+            reward=10
+        else:            
+            reward = np.tanh(2 - 0.005*(distance))
             
         return reward
 
