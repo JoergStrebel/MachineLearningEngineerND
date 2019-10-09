@@ -1,5 +1,12 @@
+import keras
 from keras import layers, models, optimizers
 from keras import backend as K
+from keras.regularizers import l2
+import tensorflow as tf
+from keras.layers import Dropout
+from keras.layers import BatchNormalization
+from keras import regularizers
+
 
 class Critic:
     """Critic (Value) Model."""
@@ -18,7 +25,19 @@ class Critic:
         # Initialize any other variables here
 
         self.build_model()
+        
+        # set the modified tf session as backend in keras
+        K.tensorflow_backend.set_session(self.get_session())
 
+
+    def get_session(self):
+        config = tf.ConfigProto()
+        config.gpu_options.allow_growth = True
+        config.gpu_options.per_process_gpu_memory_fraction = 0.10
+        return tf.Session(config=config)
+
+
+        
     def build_model(self):
         """Build a critic (value) network that maps (state, action) pairs -> Q-values."""
         # Define input layers
@@ -26,12 +45,21 @@ class Critic:
         actions = layers.Input(shape=(self.action_size,), name='actions')
 
         # Add hidden layer(s) for state pathway
-        net_states = layers.Dense(units=32, activation='relu')(states)
-        net_states = layers.Dense(units=64, activation='relu')(net_states)
+        #net_states = layers.Dropout(0.2)(states)
+        net_states = layers.Dense(units=400, activation='relu', kernel_regularizer=regularizers.l2(0.01))(states)
+        #net_states = layers.Dropout(0.2)(net_states)
+        net = layers.BatchNormalization()(net_states)
+        net_states = layers.Dense(units=300, activation='relu', kernel_regularizer=regularizers.l2(0.01))(net_states)
+        net = layers.BatchNormalization()(net_states)
 
         # Add hidden layer(s) for action pathway
-        net_actions = layers.Dense(units=32, activation='relu')(actions)
-        net_actions = layers.Dense(units=64, activation='relu')(net_actions)
+        # https://www.dlology.com/blog/one-simple-trick-to-train-keras-model-faster-with-batch-normalization/
+        #net_actions = layers.Dropout(0.2)(actions)
+        net_actions = layers.Dense(units=400, activation='relu', kernel_regularizer=regularizers.l2(0.01))(actions)
+        #net_actions = layers.Dropout(0.2)(net_actions)
+        net_actions = layers.BatchNormalization()(net_actions)
+        net_actions = layers.Dense(units=300, activation='relu', kernel_regularizer=regularizers.l2(0.01))(net_actions)
+        net_actions = layers.BatchNormalization()(net_actions)
 
         # Try different layer sizes, activations, add batch normalization, regularizers, etc.
 
@@ -48,7 +76,7 @@ class Critic:
         self.model = models.Model(inputs=[states, actions], outputs=Q_values)
 
         # Define optimizer and compile model for training with built-in loss function
-        optimizer = optimizers.Adam()
+        optimizer = optimizers.Adam(lr=0.001)
         self.model.compile(optimizer=optimizer, loss='mse')
 
         # Compute action gradients (derivative of Q values w.r.t. to actions)
