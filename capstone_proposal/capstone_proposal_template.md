@@ -33,6 +33,11 @@ stock exchanges (mainly ETFs). If this project is successful, it will be very he
 ### Problem Statement
 _(approx. 1 paragraph)_
 
+long-term investment strategy under budget and time constraints on European ETFs suitable for retirement investing.
+The goal is not to generate sustainable or supreme 
+&alpha; ([Definition](https://www.investopedia.com/articles/investing/092115/alpha-and-beta-beginners.asp)), but to 
+automate the investment decision (and free the investor of manual labour).  
+
 ```
 In this section, clearly describe the problem that is to be solved. The problem described should be well defined and 
 should have at least one relevant potential solution. Additionally, describe the problem thoroughly such that it is 
@@ -76,10 +81,12 @@ result is measurable (can be measured by some metric and clearly observed) with 
 The benchmark for my proposed RL trading algorithm would be a passive dollar-cost averaging strategy 
 ([Link](https://en.wikipedia.org/wiki/Dollar_cost_averaging)) in combination with a buy-and-hold strategy 
 ([Link](https://en.wikipedia.org/wiki/Buy_and_hold)). In essence, the investor regularly buys investment products for a 
-constant amount of money and then holds these products for a long period of time. This strategy minimizes risk, but it 
-may also overlook opportunities and does not take advantage of the market direction.
-The benchmark strategy is implemented in the same framework as the RL agent and it is compared on the same data.
-The actual metric to compare both strategies will be percentage returns per time period.
+constant amount of money and then holds these products for a long period of time. Such a strategy would typically be 
+found with long-term investors building a retirement portfolio.   
+
+This strategy minimizes risk, but it may also overlook opportunities and does not take advantage of the market direction.
+The benchmark strategy is implemented in the same programming framework as the RL agent and it is compared on the same 
+data from the same financial products.
  
 
 ### Evaluation Metrics
@@ -92,6 +99,7 @@ the data, the problem statement, and the intended solution. Describe how the eva
 provide an example of their mathematical representations (if applicable). Complex evaluation metrics should be clearly 
 defined and quantifiable (can be expressed in mathematical or logical terms).
 ```
+The actual metric to compare both strategies will be percentage returns per time period.
 
 ### Project Design
 _(approx. 1 page)_
@@ -104,6 +112,8 @@ should align with the qualities of the previous sections. Additionally, you are 
 visualizations, pseudocode, or diagrams to aid in describing the project design, but it is not required. 
 The discussion should clearly outline your intended workflow of the capstone project.
 ```
+
+### References
 
 -----------
 
