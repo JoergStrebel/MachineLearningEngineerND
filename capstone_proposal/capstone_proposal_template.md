@@ -8,23 +8,37 @@ _(approx. 2-3 pages)_
 
 ### Domain Background
 _(approx. 1-2 paragraphs)_
-
 ```In this section, provide brief details on the background information of the domain from which the project is proposed. 
 Historical information relevant to the project should be included.
 ``` 
+As people age, they inevitably retire from their jobs to live off their savings. If you google for "retirement investing today", 
+you will find around 143 million related web pages on the WWW. So the topic is very relevant to many people. In Germany, 
+a regular employee has to 
+spend a certain percentage of his salary on a state-run insurance, but they can also opt to save more an put the money 
+into financial products to secure their financial needs during retirement. One possible way to invest money for retirement 
+is to participate in the stock market. This option has become more important over the last 10 years, as the fixed-interest 
+investment opportunities have largely vanished or yield unsatisfactory profits.
 
 ```
 Motivation - It should be clear how or why a problem in the domain can or should be solved.
 ``` 
-[Wikifolio](https://www.wikifolio.com/de/de/home), a German company, uses a social media platform to share investment 
-portfolios of platform members and offers the chance to investors to put their money in one of these portfolios. If a 
-trading agent was successful, it could be used there as well.      
-
-Robo-Advisory
+If a person then chooses to use the stock market for long-term retirement investment, they need to have a sound and secure 
+investment strategy, i.e. how much to invest, when to buy, what to buy (or sell). Ideally, the strategy leads to a long and steady 
+increase of the value of the portfolio, so that the money is available when they retire. 
+Now the problem arises , how the individual can come up with such a strategy. 
 
 ```
 Related academic research should be appropriately cited in this section, including why that research is relevant.
 ``` 
+https://www.sciencedirect.com/science/article/abs/pii/S0304405X06001127
+https://www.tandfonline.com/doi/abs/10.1080/10920277.2000.10595899
+
+INVESTING FOR RETIREMENT: USING THE PAST TO MODEL THE FUTURE.
+https://web.b.ebscohost.com/abstract?direct=true&profile=ehost&scope=site&authtype=crawler&jrnl=10403981&AN=5558183&h=eT7kaJlvwTYF03fBKPVPAjxrYbbIg71Il8Becp1HEiwL8qqWbRJWMYAXYjBqROYHIY%2fvI3OxVdeCqEclAZfgpQ%3d%3d&crl=c&resultNs=AdminWebAuth&resultLocal=ErrCrlNotAuth&crlhashurl=login.aspx%3fdirect%3dtrue%26profile%3dehost%26scope%3dsite%26authtype%3dcrawler%26jrnl%3d10403981%26AN%3d5558183
+
+https://patents.google.com/patent/US7398241B2/en
+
+
 
 I also have a personal motivation to investigate this problem, as I am an active investor at German, European and US 
 stock exchanges (mainly ETFs). If this project is successful, it will be very helpful for my investment decisions.  
@@ -34,9 +48,6 @@ stock exchanges (mainly ETFs). If this project is successful, it will be very he
 _(approx. 1 paragraph)_
 
 long-term investment strategy under budget and time constraints on European ETFs suitable for retirement investing.
-The goal is not to generate sustainable or supreme 
-&alpha; ([Definition](https://www.investopedia.com/articles/investing/092115/alpha-and-beta-beginners.asp)), but to 
-automate the investment decision (and free the investor of manual labour).  
 
 ```
 In this section, clearly describe the problem that is to be solved. The problem described should be well defined and 
@@ -57,6 +68,8 @@ as necessary It should be clear how the dataset(s) or input(s) will be used in t
 appropriate given the context of the problem.
 ```
 
+
+
 ### Solution Statement
 _(approx. 1 paragraph)_
 
@@ -67,6 +80,19 @@ that the solution is quantifiable (the solution can be expressed in mathematical
 (the solution can be measured by some metric and clearly observed), and replicable (the solution can be reproduced and 
 occurs more than once).
 ```
+
+I would like to suggest a reinforcement-learning based agent as a solution. The agent would decide when to trade and 
+how much to buy from the three given ETFs. It is also supposed to stay within the given budget constraints. The agent 
+learns a trading strategy based on historical stock data and then runs daily and outputs the percentage amounts to buy 
+or sell from the funds in the portofolio.
+The goal is not to generate sustainable or supreme  
+&alpha; ([Definition](https://www.investopedia.com/articles/investing/092115/alpha-and-beta-beginners.asp)), but to 
+automate the investment decision (and free the investor of manual labour).  
+
+[Wikifolio](https://www.wikifolio.com/de/de/home), a German company, uses a social media platform to share investment 
+portfolios of platform members and offers the chance to investors to put their money in one of these portfolios. If a 
+trading agent was successful, it could be used there as well.      
+
 
 ### Benchmark Model
 _(approximately 1-2 paragraphs)_
