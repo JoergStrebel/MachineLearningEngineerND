@@ -67,7 +67,10 @@ obtained, and the characteristics of the dataset or input, should be included wi
 as necessary It should be clear how the dataset(s) or input(s) will be used in the project and whether their use is 
 appropriate given the context of the problem.
 ```
-
+- S&P 500 index: https://finance.yahoo.com/quote/%5EGSPC/history?p=%5EGSPC, 
+https://www.ariva.de/ishares_s-p_500_ucits_etf-fonds?utp=1, https://www.ariva.de/ishares_s-p_500_ucits_etf-fonds/historische_kurse
+- MSCI World Index: https://finance.yahoo.com/quote/X010.DE/history?p=X010.DE, https://www.ariva.de/comstage_msci_world_trn_ucits_etf-fonds
+- STOXX EUROPE 600 ETF: https://www.ariva.de/db_x-tr-stoxx_europe_600_etf_inhaber-anteile_1c-fonds/historische_kurse
 
 
 ### Solution Statement
@@ -140,6 +143,17 @@ The discussion should clearly outline your intended workflow of the capstone pro
 ```
 
 ### References
+- Machine Learning in Asset Management: https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3420952, code: https://colab.research.google.com/drive/1FzLCI0AO3c7A4bp9Fi01UwXeoc7BN8sW#scrollTo=9d-d2slt0njw
+- Stock prediction models: https://github.com/huseinzol05/Stock-Prediction-Models
+- Theory of Long-Term Stock Forecasting: https://github.com/Hvass-Labs/FinanceOps, https://colab.research.google.com/github/Hvass-Labs/FinanceOps/blob/master/01C_Theory_of_Long-Term_Stock_Forecasting.ipynb
+- Reinforcement learning in Finance: https://github.com/gstenger98/rl-finance, https://github.com/jjakimoto/DQN
+- Deep Trading Agent: https://github.com/samre12/deep-trading-agent
+- Reinforcement trading: https://github.com/deependersingla/deep_trader
+- Stock Trading Market OpenAI Gym Environment with Deep Reinforcement Learning using Keras: https://github.com/kh-kim/stock_market_reinforcement_learning
+- Deep Trading: https://github.com/Rachnog/Deep-Trading
+
+
+
 
 -----------
 
