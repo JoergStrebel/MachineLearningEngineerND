@@ -4,13 +4,8 @@ Jörg Strebel
 October 10th 2019
 
 ## Proposal
-_(approx. 2-3 pages)_
 
 ### Domain Background
-_(approx. 1-2 paragraphs)_
-```In this section, provide brief details on the background information of the domain from which the project is proposed. 
-Historical information relevant to the project should be included.
-``` 
 As people age, they inevitably retire from their jobs to live off their savings. If you google for "retirement investing today", 
 you will find around 143 million related web pages on the WWW. So the topic is very relevant to many people. In Germany, 
 a regular employee has to 
@@ -19,43 +14,27 @@ into financial products to secure their financial needs during retirement. One p
 is to participate in the stock market. This option has become more important over the last 10 years, as the fixed-interest 
 investment opportunities have largely vanished or yield unsatisfactory profits.
 
-```
-Motivation - It should be clear how or why a problem in the domain can or should be solved.
-``` 
 If a person then chooses to use the stock market for long-term retirement investment, they need to have a sound and secure 
 investment strategy, i.e. how much to invest, when to buy, what to buy (or sell). Ideally, the strategy leads to a long and steady 
 increase of the value of the portfolio, so that the money is available when they retire. 
 Now the problem arises , how the individual can come up with such a strategy. 
 
-```
-Related academic research should be appropriately cited in this section, including why that research is relevant.
-``` 
-https://www.sciencedirect.com/science/article/abs/pii/S0304405X06001127
-https://www.tandfonline.com/doi/abs/10.1080/10920277.2000.10595899
-
-INVESTING FOR RETIREMENT: USING THE PAST TO MODEL THE FUTURE.
-https://web.b.ebscohost.com/abstract?direct=true&profile=ehost&scope=site&authtype=crawler&jrnl=10403981&AN=5558183&h=eT7kaJlvwTYF03fBKPVPAjxrYbbIg71Il8Becp1HEiwL8qqWbRJWMYAXYjBqROYHIY%2fvI3OxVdeCqEclAZfgpQ%3d%3d&crl=c&resultNs=AdminWebAuth&resultLocal=ErrCrlNotAuth&crlhashurl=login.aspx%3fdirect%3dtrue%26profile%3dehost%26scope%3dsite%26authtype%3dcrawler%26jrnl%3d10403981%26AN%3d5558183
-
-https://patents.google.com/patent/US7398241B2/en
-
-
-
-I also have a personal motivation to investigate this problem, as I am an active investor at German, European and US 
-stock exchanges (mainly ETFs). If this project is successful, it will be very helpful for my investment decisions.  
-
+How to do retirement investing has been a serious research topic over the last decades (e.g. [Farhi and Panageas 2007][1]
+, [Gerber and Shiu 2013][2], [Bierwirth][3]). I also have a personal motivation to investigate this problem, as I am an 
+active investor at German, European and US stock exchanges (mainly ETFs). If this project is successful, it will be very 
+helpful for my investment decisions.  
 
 ### Problem Statement
-_(approx. 1 paragraph)_
+This capstone project aims to solve the problem of finding a good long-term investment strategy under budget, time and 
+risk constraints on ETFs suitable for retirement investing. Currently, investors that follow a passive approach usually have 
+simple strategies which might leave money on the table, and investors that follow an active approach need a lot of time 
+to inform themselves and make trading decisions. An investor usually faces a budget and time constraint, as they invest only a 
+limited amount of money per time period (e.g. per month); also, the investor face a risk constraint, as they cannot 
+afford to lose their retirement savings.   
 
-long-term investment strategy under budget and time constraints on European ETFs suitable for retirement investing.
-
-```
-In this section, clearly describe the problem that is to be solved. The problem described should be well defined and 
-should have at least one relevant potential solution. Additionally, describe the problem thoroughly such that it is 
-clear that the problem is quantifiable (the problem can be expressed in mathematical or logical terms) , 
-measurable (the problem can be measured by some metric and clearly observed), and replicable 
-(the problem can be reproduced and occurs more than once).
-```
+The assessment of the algorithm to find such a strategy (i.e. the learning part of an agent) is straightforward, as you 
+can reuse the existing financial KPIs like returns, profitability, volatility etc. Both the inputs (trading actions) and 
+the outputs (financial outcomes) are quantifiable, measurable and replicable (for historic stock data).
 
 ### Datasets and Inputs
 _(approx. 2-3 paragraphs)_
@@ -67,6 +46,8 @@ obtained, and the characteristics of the dataset or input, should be included wi
 as necessary It should be clear how the dataset(s) or input(s) will be used in the project and whether their use is 
 appropriate given the context of the problem.
 ```
+
+Historic stock data (daily granularity):
 - S&P 500 index: https://finance.yahoo.com/quote/%5EGSPC/history?p=%5EGSPC, 
 https://www.ariva.de/ishares_s-p_500_ucits_etf-fonds?utp=1, https://www.ariva.de/ishares_s-p_500_ucits_etf-fonds/historische_kurse
 - MSCI World Index: https://finance.yahoo.com/quote/X010.DE/history?p=X010.DE, https://www.ariva.de/comstage_msci_world_trn_ucits_etf-fonds
@@ -143,7 +124,13 @@ The discussion should clearly outline your intended workflow of the capstone pro
 ```
 
 ### References
-- Machine Learning in Asset Management: https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3420952, code: https://colab.research.google.com/drive/1FzLCI0AO3c7A4bp9Fi01UwXeoc7BN8sW#scrollTo=9d-d2slt0njw
+[1]:Farhi and Panageas: Saving and investing for early retirement: A theoretical analysis. https://www.sciencedirect.com/science/article/abs/pii/S0304405X06001127
+
+[2]:Gerber and Shiu: Investing for Retirement. https://www.tandfonline.com/doi/abs/10.1080/10920277.2000.10595899
+
+[3]:Bierwirth: INVESTING FOR RETIREMENT: USING THE PAST TO MODEL THE FUTURE. https://web.b.ebscohost.com/abstract?direct=true&profile=ehost&scope=site&authtype=crawler&jrnl=10403981&AN=5558183&h=eT7kaJlvwTYF03fBKPVPAjxrYbbIg71Il8Becp1HEiwL8qqWbRJWMYAXYjBqROYHIY%2fvI3OxVdeCqEclAZfgpQ%3d%3d&crl=c&resultNs=AdminWebAuth&resultLocal=ErrCrlNotAuth&crlhashurl=login.aspx%3fdirect%3dtrue%26profile%3dehost%26scope%3dsite%26authtype%3dcrawler%26jrnl%3d10403981%26AN%3d5558183
+
+- D. Snow: Machine Learning in Asset Management: https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3420952, code: https://colab.research.google.com/drive/1FzLCI0AO3c7A4bp9Fi01UwXeoc7BN8sW#scrollTo=9d-d2slt0njw
 - Stock prediction models: https://github.com/huseinzol05/Stock-Prediction-Models
 - Theory of Long-Term Stock Forecasting: https://github.com/Hvass-Labs/FinanceOps, https://colab.research.google.com/github/Hvass-Labs/FinanceOps/blob/master/01C_Theory_of_Long-Term_Stock_Forecasting.ipynb
 - Reinforcement learning in Finance: https://github.com/gstenger98/rl-finance, https://github.com/jjakimoto/DQN
@@ -151,6 +138,8 @@ The discussion should clearly outline your intended workflow of the capstone pro
 - Reinforcement trading: https://github.com/deependersingla/deep_trader
 - Stock Trading Market OpenAI Gym Environment with Deep Reinforcement Learning using Keras: https://github.com/kh-kim/stock_market_reinforcement_learning
 - Deep Trading: https://github.com/Rachnog/Deep-Trading
+- https://teddykoker.com/2019/05/trading-with-reinforcement-learning-in-python-part-i-gradient-ascent/, https://github.com/teddykoker/blog.git
+- https://github.com/keon/deepstock.git, https://github.com/keon/deepstock
 
 
 
