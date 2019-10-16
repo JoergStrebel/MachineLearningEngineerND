@@ -55,7 +55,23 @@ the following three indices with daily data granularity:
 The three index funds are ideal financial products for retirement investing, as they offer very high diversification, 
 and thus very low risk of wild swings or long-term losses. The three ETFs are also globally diversified: one from the US,
  one from Europe and one covering global enterprises. 
-The Websites provide the data in a CSV format, with the columns: date, open price, high price, low price, close price.
+
+The Websites provide the data in one CSV format for each index fund, with the columns: date, open price, high price, 
+low price, close price. These are all real-valued columns, so there is no categorical data and no classes. 
+Hence there can be no imbalance in the data sets. All funds data consists of time series with a daily granularity and hence,
+ they feature the same number of data points.  
+
+The number of data points depends on the number of trading days at the stock exchange. The file `resources/wkn_ETF110_historic.csv` 
+gives an example of the data; I plan to use the close price which is available for the complete time period.  For a 10-year 
+time period, we have roughly 2170 records for daily stock prices per fund.
+Please see the following sample data for MSCI World Index:  
+
+| Date | Open            | High  |  Low  | Close | 
+| ------------- | -------------:| -----:| -----:|-----:| 
+| 11.10.2019   | 60,9378€ | 60,9378€ | 60,9378€ | 60,9378€ | 
+| 10.10.2019 | 60,1189€  |  60,1189€ |  60,1189€ |  60,1189€ |
+| 09.10.2019 | 59,7625€  |  59,7625€ |  59,7625€ |  59,7625€ |
+
 Ideally, the historic data would span 10 years of stock data, with the last 2 years as test data.
 
 Other inputs consist of the following financial parameters: 
@@ -90,11 +106,18 @@ data from the same financial products over the same time period.
 
 ### Evaluation Metrics
 The evaluation happens on a subset of the available historic data, the test set. The two investment strategies are 
-evaluated using the stock data in this test set. The 
-metric to compare both strategies will be the total value increase after the test period, i.e. how much has the total value 
+evaluated using the stock data in this test set. The stock data contains one time series of prices per day per fund, so 
+there are no categorical attributes and no risk of imbalanced classes. All three funds time series are available on the 
+complete time period under investigation.   
+
+The metric to compare both strategies will be the total value increase after the test period, i.e. how much has the total value 
 of the portfolio increased using either one of the trading strategies. You can then calculate the percentage increase based 
 on the initial budget. A similar approach is followed in [Stock prediction models][5].
 The total value is the Euro value of the portfolio at the last day of the test period plus the remaining budget.
+
+On a more technical level, the project follows the same approach as the quadcopter project and measures the temporal 
+development of the learning process by tracking the total reward per iteration. This is a visualization of the learning 
+curve of the agent.
 
 [Teddy Koker's Blog entry][6] uses the Sharpe ratio as a metric for the risk-adjusted  performance of an investment 
 over time. This metric might be an alternative to the purely monetary metric given above, as it includes the associated 
