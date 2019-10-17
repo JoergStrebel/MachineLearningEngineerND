@@ -104,6 +104,8 @@ This strategy minimizes risk, but it may also overlook opportunities and does no
 The benchmark strategy is implemented in the same programming framework as the RL agent and it is compared on the same 
 data from the same financial products over the same time period.
 
+[Wang et al. - Deep Q-trading][7] also use a buy-and-hold strategy as a benchmark for their q-learning trading system. 
+
 ### Evaluation Metrics
 The evaluation happens on a subset of the available historic data, the test set. The two investment strategies are 
 evaluated using the stock data in this test set. The stock data contains one time series of prices per day per fund, so 
@@ -115,24 +117,44 @@ of the portfolio increased using either one of the trading strategies. You can t
 on the initial budget. A similar approach is followed in [Stock prediction models][5].
 The total value is the Euro value of the portfolio at the last day of the test period plus the remaining budget.
 
-On a more technical level, the project follows the same approach as the quadcopter project and measures the temporal 
-development of the learning process by tracking the total reward per iteration. This is a visualization of the learning 
-curve of the agent.
+On a more technical level, the project follows the same approach as the quadcopter project and measures the learning 
+process by tracking the development of the total reward. This is a visualization of the learning 
+curve of the agent. [Poole and Mackworth 2017](https://artint.info/html/ArtInt_267.html) in their book on artificial 
+intelligence also recommend this approach. They use a chart of the cumulative reward over time. 
 
-[Teddy Koker's Blog entry][6] uses the Sharpe ratio as a metric for the risk-adjusted  performance of an investment 
-over time. This metric might be an alternative to the purely monetary metric given above, as it includes the associated 
-risk, but it will only be considered as an extension.
+![Exemplary Cumulative reward Plot](./resources/rl-reward-plot-4.png "Exemplary Cumulative Reward Plot")
+
+"One way to show the 
+performance of a reinforcement learning algorithm is to plot the cumulative reward (the sum of all rewards received so 
+far) as a function of the number of steps. One algorithm dominates another if its plot is consistently above the other. 
+[...]
+There are three statistics of this plot that are important:
+
+- The asymptotic slope shows how good the policy is after the algorithm has stabilized.
+- The minimum of the curve shows how much reward must be sacrificed before it starts to improve.
+- The zero crossing shows how long it takes until the algorithm has recouped its cost of learning." 
+
+[A. Proutiere et al.](http://www.it.uu.se/research/systems_and_control/education/2017/relearn/lec3.pdf) from Swedish KTH 
+university suggest regret as an evaluation metric for reinforcement learning. Roughly speaking, regret is the 
+difference between the cumulative reward of an optimal policy minus the cumulative reward of the learned policy. In this 
+project, calculating the optimal trading strategy based on the daily closing prices is a non-trivial optimization problem 
+and would probably require some sort of mixed-integer linear optimization model (https://en.wikipedia.org/wiki/Integer_programming). 
+This would go well beyond the scope of a normal capstone project.    
+
 
 ### Project Design
 The paragraphs in this section will outline the design decisions around the agent. 
 
 The following reward function candidates are available in the research literature:
 
+- [Teddy Koker's Blog entry][6] uses the Sharpe ratio as a metric for the risk-adjusted  performance of an investment 
+over time. This metric might be an alternative to the purely monetary metric given above, as it includes the associated 
+risk, but it will only be considered as an extension. 
 - [deep_trader][4] uses a reward function based on sales profit per action.
 - [Stock prediction models][5] uses rate of return = ((total budget - initial budget) / initial budget) as a reward 
 function. The rate of return is calculated over all daily time slots.
 - [Wang et al. - Deep Q-trading][7] show how to use Q-learning for trading decisions and they found that the accumulated 
-wealth over n days in the past was a good candidate for a reward function. So this project will adopt this approach.   
+wealth over n days in the past was a good candidate for a reward function. So this project will adopt this approach.
 
 The reward function properties look like this:
 
