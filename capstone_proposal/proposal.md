@@ -59,7 +59,8 @@ and thus very low risk of wild swings or long-term losses. The three ETFs are al
 The Websites provide the data in one CSV format for each index fund, with the columns: date, open price, high price, 
 low price, close price. These are all real-valued columns, so there is no categorical data and no classes. 
 Hence there can be no imbalance in the data sets. All funds data consists of time series with a daily granularity and hence,
- they feature the same number of data points.  
+ they feature the same number of data points. The data set does not show individual stock trades (buy/sell actions), only the closing price, so it is not imbalanced in terms of 
+trade decisions.  
 
 The number of data points depends on the number of trading days at the stock exchange. The file `resources/wkn_ETF110_historic.csv` 
 gives an example of the data; I plan to use the close price which is available for the complete time period.  For a 10-year 
@@ -76,8 +77,8 @@ Ideally, the historic data would span 10 years of stock data, with the last 2 ye
 
 Other inputs consist of the following financial parameters: 
 
-- available monthly savings of investor
-- available initial budget (no credit will be considered) 
+- available monthly savings of investor in €
+- available initial budget in € (no credit will be considered) 
 - transaction fees based on DAB Bank for direct orders (no savings plan). This is likely to be a transaction cost rate 
 based on the trade volume (see also [Teddy Koker's Blog][6]).
 
@@ -98,19 +99,32 @@ The benchmark for my proposed RL trading algorithm would be a passive dollar-cos
 ([Link](https://en.wikipedia.org/wiki/Dollar_cost_averaging)) in combination with a buy-and-hold strategy 
 ([Link](https://en.wikipedia.org/wiki/Buy_and_hold)). In essence, the investor buys each month investment products for a 
 constant amount of money and then holds these products indefinitely. Such a strategy would typically be 
-found with long-term investors building a retirement portfolio.
+found with long-term investors building a retirement portfolio. At the end of the trading period, the strategy yields a 
+portfolio of funds and the remaining budget, which can be added together to give the total value in €. This value is the 
+benchmark for my reinforcement learning agent to beat; my RL agent will also produce a portfolio of funds with a total value.
+[Wang et al. - Deep Q-trading][7] also use a buy-and-hold strategy as a benchmark for their q-learning trading system.  
 
 This strategy minimizes risk, but it may also overlook opportunities and does not take advantage of the market direction.
 The benchmark strategy is implemented in the same programming framework as the RL agent and it is compared on the same 
 data from the same financial products over the same time period.
 
-[Wang et al. - Deep Q-trading][7] also use a buy-and-hold strategy as a benchmark for their q-learning trading system. 
 
 ### Evaluation Metrics
 The evaluation happens on a subset of the available historic data, the test set. The two investment strategies are 
 evaluated using the stock data in this test set. The stock data contains one time series of prices per day per fund, so 
 there are no categorical attributes and no risk of imbalanced classes. All three funds time series are available on the 
-complete time period under investigation.   
+complete time period under investigation.
+
+It must be noted that the action space is continuous as the agent can sell and buy real-valued amount of shares (under a 
+budget constraint). The agent is supposed to detect/learn the more favorable action - that's the goal of reinforcement learning. 
+So the agent might learn a highly imbalanced strategy, i.e. it might buy more than it might sell or hold. When the agent 
+sees climbing share prices, it will be more inclined to buy stock, as it expects more reward from it. In a bull market, 
+the actions will be 
+imbalanced towards buying. The actions of the agent are part of the input training set of the critic neural network. 
+To counter the effect of imbalanced and self-reinforcing strategies, two measures are taken: 
+
+- a noise function is introduced, that leads the agent to try out random behaviour
+- the experience replay buffer is queried in a random fashion so that temporal correlations are broken.     
 
 The metric to compare both strategies will be the total value increase after the test period, i.e. how much has the total value 
 of the portfolio increased using either one of the trading strategies. You can then calculate the percentage increase based 
@@ -136,10 +150,11 @@ There are three statistics of this plot that are important:
 
 [A. Proutiere et al.](http://www.it.uu.se/research/systems_and_control/education/2017/relearn/lec3.pdf) from Swedish KTH 
 university suggest regret as an evaluation metric for reinforcement learning. Roughly speaking, regret is the 
-difference between the cumulative reward of an optimal policy minus the cumulative reward of the learned policy. In this 
-project, calculating the optimal trading strategy based on the daily closing prices is a non-trivial optimization problem 
-and would probably require some sort of mixed-integer linear optimization model (https://en.wikipedia.org/wiki/Integer_programming). 
-This would go well beyond the scope of a normal capstone project.    
+difference between the cumulative reward of an optimal policy minus the cumulative reward of the learned policy and judges, 
+ how much learning/exploration the agent has to do in an environment. In this project, calculating the optimal trading 
+ strategy based on the daily closing prices is a non-trivial optimization problem 
+and would probably require some sort of linear optimization model (https://en.wikipedia.org/wiki/Integer_programming). 
+This would go well beyond the scope of a normal capstone project.
 
 
 ### Project Design
