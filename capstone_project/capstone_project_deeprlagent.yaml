@@ -1,0 +1,23 @@
+name: deeprlagent
+dependencies:
+- python=3.6
+- ipykernel
+- ipython
+- ipython_genutils
+- ipywidgets
+- jupyter
+- jupyter_client
+- jupyter_console
+- jupyter_core
+- matplotlib
+- mkl
+- numpy
+- pandas
+- scikit-learn
+- scipy
+- seaborn
+- tensorflow=1.*
+- keras
+
+
+

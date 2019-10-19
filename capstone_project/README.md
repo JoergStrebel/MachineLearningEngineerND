@@ -1,11 +1,30 @@
-# Machine Learning Engineer Nanodegree
-## Specializations
-## Project: Capstone Proposal and Capstone Project
+# Deep RL Trading Agent
 
-**Note**
+*Teach an agent how to trade the stock market!*
 
-The Capstone is a two-staged project. The first is the proposal component, where you can receive valuable feedback about your project idea, design, and proposed solution. This must be completed prior to your implementation and submitting for the capstone project. 
+In this project, an agent learns to make buying and selling decisions using a reinforcement learning algorithm! The agent is benchmarked against a traditional buy-and-hold strategy.
 
-You can find the [capstone proposal rubric here](https://review.udacity.com/#!/rubrics/410/view), and the [capstone project rubric here](https://review.udacity.com/#!/rubrics/108/view). Please ensure that you are following directions correctly before submitting these two stages which encapsulate your capstone.
+## Project Instructions
 
-Please email [machine-support@udacity.com](mailto:machine-support@udacity.com) if you have any questions.
+1. Create and activate a new environment.
+
+```
+conda env create -f capstone_project_deeprlagent.yaml
+source activate deeprlagent
+```
+
+3. Create an [IPython kernel](http://ipython.readthedocs.io/en/stable/install/kernel_install.html) for the `deeprlagent` environment. 
+```
+python -m ipykernel install --user --name deeprlagent --display-name "deeprlagent"
+```
+
+4. Open the notebook.
+```
+jupyter notebook deeprlagent_project.ipynb
+```
+
+5. Before running code, change the kernel to match the `deeprlagent` environment by using the drop-down menu (**Kernel > Change kernel > deeprlagent**). Then, follow the instructions in the notebook.
+
+6. The needed conda packages to complete this project are documented in the `capstone_project_deeprlagent.yaml` file in the repository.
+
+7. Data acquisition: TODO
