@@ -1,9 +1,13 @@
 import numpy as np
 import keras
+from task import Task
 
 class BAH_Agent():
-    """Reinforcement Learning agent that learns using DDPG."""
-    def __init__(self, task):
+    """
+    buy-and-hold agent without learning capabilities
+    Financial Modeling: ./capstone_project/resources/optimal_trading_strategy.ods"
+    """
+    def __init__(self, task: Task):
         # the constructor does not return any value
         # Task (environment) information
         self.task = task

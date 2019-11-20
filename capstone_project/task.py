@@ -3,57 +3,72 @@ from  market import Market
 import pandas as pd
 
 class Task():
-    """Task (environment) that defines the goal and provides feedback to the agent."""
-    def __init__(self, oMarkt: Market):
+    """
+    Task (environment) that defines the goal and provides feedback to the agent.
+    In this project, the class Task can be seen as the bank or broker of the agent, i.e. a facility by which the agent
+    interacts with the stock market.
+    The task environment also enforces the budget constraints (like a bank or a broker) and tracks the portfolio of the
+    agent.
+    """
+    def __init__(self, oMarkt: Market, cons_mon_budget: float, starting_budget: float, stocks: list):
         """Initialize a Task object.
         Params
         ======
-
+        oMarkt: the market data
+        cons_mon_budget: value of budget constraint
+        starting_budget
         """
         # Market
-        self.sim = oMarkt
-        self.action_repeat = 1
+        self.market = oMarkt
 
-        self.state_size = self.action_repeat * 6
+        self.state_size = self.action_repeat * 1
         self.action_low = 0
         self.action_high = 900
         self.action_size = 4
 
-        # Goal
-        self.target_pos = None
+        self.portfolio = {x: 0.0 for x in stocks} # dictionary with key:value pairs for the portfolio positions
+        self.account = starting_budget
+        self.start_budget = starting_budget
+        self.cons_month_budget = cons_mon_budget
+        self.rewardscale = 0.001
 
     def get_reward(self):
         """
-        Uses current pose of sim to return reward.
+        Uses current portfolio to calculate and return total portfolio value for the current time slot.
         """
-        # This part of the reward function is based on the Euclidean distance (L2 norm)
-        #l2norm = np.sqrt(np.sum(np.square(self.sim.pose[:3] - self.target_pos)))
-        #reward_distance = -2.0 * np.tanh(0.1 * l2norm)
-        # reward_distance = -l2norm/5
+        totalvalue = 0.0
 
-        # This part of the reward function is based on the L1 norm
-        distance=np.sum(abs(self.sim.pose[:3] - self.target_pos))
+        for key,value in self.portfolio.items():
+            totalvalue=totalvalue + value*self.market.get_price(key)
 
-        if distance<3:
-            reward=10
-        else:            
-            reward = np.tanh(2 - 0.005*(distance))
-            
+        totalvalue = totalvalue + self.account - self.start_budget
+        reward = np.tanh(self.rewardscale*totalvalue)
         return reward
 
-    def step(self, rotor_speeds):
-        """Uses action to obtain next state, reward, done."""
+    def step(self, portfolio: dict, transactions: dict):
+        """
+        the transactions come out of the agent.act() function
+        Uses action to obtain next state, reward, done.
+        transactions are a dict with the ticker names and the shares to buy or sell
+        """
         reward = 0
-        pose_all = []
-        for _ in range(self.action_repeat):
-            done = self.sim.next_timestep(rotor_speeds)  # update the sim pose and velocities
-            reward += self.get_reward()
-            pose_all.append(self.sim.pose)
-        next_state = np.concatenate(pose_all)
+        done = self.oMarket.next_timestep()  # no need to pass transactions to market as they do not impact it
+
+        # execute the transactions and change the portfolio
+        for key,value in transactions.items():
+            self.portfolio[key]=self.portfolio[key]+value
+            self.account=self.account-value*self.market.get_price(key)
+        #TODO: check the budget constraints
+
+        # calculate reward
+        reward += self.get_reward()
+
+        next_state = None #update portfolio with transactions
         return next_state, reward, done
 
     def reset(self):
-        """Reset the sim to start a new episode."""
-        self.sim.reset()
-        state = np.concatenate([self.sim.pose] * self.action_repeat)
+        """Reset the task to start a new episode."""
+        self.market.reset()
+
+        state = None
         return state
