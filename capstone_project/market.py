@@ -35,6 +35,9 @@ class Market:
             self.done = True
         return self.done
 
-    def get_price(self, symbol):
+    def get_value(self, symbol):
         """symbol can be a list of columns"""
         return self.marketdata.iloc[self.currentdate][symbol]
+
+    def get_last_values(self, symbol, no):
+        return self.marketdata[symbol][self.currentdate-no:self.currentdate]

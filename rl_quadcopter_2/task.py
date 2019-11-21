@@ -59,5 +59,6 @@ class Task():
     def reset(self):
         """Reset the sim to start a new episode."""
         self.sim.reset()
+
         state = np.concatenate([self.sim.pose] * self.action_repeat)
         return state

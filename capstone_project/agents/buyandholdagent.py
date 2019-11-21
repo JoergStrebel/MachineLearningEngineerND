@@ -17,11 +17,10 @@ class BAH_Agent():
         self.action_high = task.action_high
         self.action_range = self.action_high - self.action_low
 
-        # internal agent state
+        # internal agent state not needed
 
         # Episode variables
-        self.last_state = None
-        self.reset_episode()
+        self.last_state = self.task.reset()
 
     def reset_episode(self):
         state = self.task.reset()
@@ -44,9 +43,14 @@ class BAH_Agent():
         """
         Choose action based on given state and policy
         Returns actions for given state(s) as per current policy.
+        Policy of this agent:
+        1. Check if it is the first of the month
+        2. If yes, buy a fixed amount of shares
         """
-        state = None
-        action = None
+        action = {}
+        if self.task.get_monthstart():
+            action = None
+            #TODO finish act() function
         return action
 
 
