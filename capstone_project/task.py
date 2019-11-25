@@ -55,7 +55,7 @@ class Task():
         reward = np.tanh(self.rewardscale*totalvalue)
         return reward
 
-    def step(self, portfolio: dict, transactions: dict):
+    def step(self, transactions: dict):
         """
         the transactions come out of the agent.act() function
         Uses action to obtain next state, reward, done.
