@@ -16,7 +16,7 @@ class Market:
     def __init__(self, dfdata: pd.DataFrame):
         self.startdate = np.min(dfdata['date'])
         self.enddate = np.max(dfdata['date'])
-        self.notradingdays = dfdata.shape[0]
+        self.notradingdays = len(dfdata.index)
         self.currentdate = 0
 
         self.stockprices = dfdata.iloc[self.currentdate]  # what is the current market price
@@ -31,13 +31,13 @@ class Market:
     def next_timestep(self):
         """ Get the stock price for the next day"""
         self.currentdate += 1
-        if self.currentdate >= self.notradingdays:
+        if self.currentdate >= self.notradingdays-1:  # index number vs. count
             self.done = True
         return self.done
 
-    def get_value(self, symbol):
+    def get_value(self, column):
         """symbol can be a list of columns"""
-        return self.marketdata.iloc[self.currentdate][symbol]
+        return self.marketdata.iloc[self.currentdate][column]
 
-    def get_last_values(self, symbol, no):
-        return self.marketdata[symbol][self.currentdate-no:self.currentdate]
+    def get_last_values(self, column, no):
+        return self.marketdata[column][self.currentdate-no:self.currentdate]

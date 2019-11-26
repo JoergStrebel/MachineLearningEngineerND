@@ -3,19 +3,26 @@ from agents.actor import Actor
 from agents.critic import Critic
 from agents.replay import ReplayBuffer
 from agents.OUNoise import OUNoise
+from task import Task
 import keras
 
-class Pilot_Agent():
+class DeepRL_Agent():
     """Reinforcement Learning agent that learns using DDPG."""
-    def __init__(self, task):
+    def __init__(self, task_train: Task, task_test: Task,  monthly_allocation: dict):
         # the constructor does not return any value
         # Task (environment) information
-        self.task = task
-        self.state_size = task.state_size
-        self.action_size = task.action_size
-        self.action_low = task.action_low
-        self.action_high = task.action_high
+        self.task = task_train
+        self.state_size = self.task.state_size
+        self.action_size = self.task.action_size
+        self.action_low = self.task.action_low
+        self.action_high = self.task.action_high
         self.action_range = self.action_high - self.action_low
+
+        self.symbol = self.task.symbol
+        self.monthly_allocation = monthly_allocation
+
+        self.task_test = task_test
+        self.testflag = False
 
         # Actor (Policy) Model
         self.actor_local = Actor(self.state_size, self.action_size, self.action_low, self.action_high)
@@ -46,12 +53,28 @@ class Pilot_Agent():
 
         # Episode variables
         self.last_state = None
-        self.reset_episode()
-
-    def reset_episode(self):
         self.noise.reset()
         state = self.task.reset()
         self.last_state = state
+
+
+    def reset_episode(self, testflag = False):
+        self.testflag = testflag
+        self.noise.reset()
+        if testflag:
+            self.task = self.task_test
+            state = self.task.reset()
+            self.last_state = state
+            self.state_size = self.task.state_size
+            self.action_size = self.task.action_size
+            self.action_low = self.task.action_low
+            self.action_high = self.task.action_high
+            self.action_range = self.action_high - self.action_low
+            self.symbol = self.task.symbol
+        else:
+            state = self.task.reset()
+            self.last_state = state
+
         return state
 
     def step(self, action, reward, next_state, done):
@@ -69,7 +92,6 @@ class Pilot_Agent():
     def act(self, state):
         """
         Returns actions for given state(s) as per current policy.
-        Attention: it establishes a bottom level for rotor speeds, it avoids rotor speed values of <0
         """
         state = np.reshape(state, [-1, self.state_size])
         action = self.actor_local.model.predict(state)[0]

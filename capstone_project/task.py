@@ -1,5 +1,5 @@
 import numpy as np
-from  market import Market
+from market import Market
 import pandas as pd
 
 class Task():
@@ -24,23 +24,24 @@ class Task():
         """
         # Market
         self.market = oMarkt
+        self.account = starting_budget
+        self.start_budget = starting_budget
+        self.cons_month_budget = cons_mon_budget
+        self.rewardscale = 0.00005
+        self.symbol = symbol
+        self.timewindow = 10  # length of time window for the historic data
+        self.symbol2column = {'SP500':'SP500_price', 'ESTOXX':'ESTOXX_price', 'MSCI':'MSCI_price'}
 
         dfzero = np.zeros(self.timewindow)
-        state = np.concatenate([dfzero], [dfzero], [0], [self.start_budget])
+        state = np.concatenate([dfzero, dfzero, [0], [self.start_budget]])
 
         self.state_size = len(state)
-        self.action_low = -1.0*starting_budget/np.mean(oMarkt.marketdata[symbol])  #maximum no of shares that can be bought
+        self.action_low = -1.0*starting_budget/np.mean(oMarkt.marketdata[self.symbol2column[symbol]])  #maximum no of shares that can be bought
         self.action_high = -1.0*self.action_low
         self.action_size = 1
 
         self.stocks=stocks
         self.portfolio = {x: 0.0 for x in stocks} # dictionary with key:value pairs for the portfolio positions
-        self.account = starting_budget
-        self.start_budget = starting_budget
-        self.cons_month_budget = cons_mon_budget
-        self.rewardscale = 0.001
-        self.timewindow = 10  # length of time window for the historic data
-        self.symbol = symbol
 
     def get_reward(self):
         """
@@ -49,7 +50,7 @@ class Task():
         totalvalue = 0.0
 
         for key,value in self.portfolio.items():
-            totalvalue=totalvalue + value*self.market.get_value(key)
+            totalvalue=totalvalue + value*self.market.get_value(self.symbol2column[key])
 
         totalvalue = totalvalue + self.account - self.start_budget
         reward = np.tanh(self.rewardscale*totalvalue)
@@ -66,19 +67,19 @@ class Task():
 
         # execute the transactions and change the portfolio
         for key,value in transactions.items():
-            transvalue=self.account-value*self.market.get_value(key)
+            transvalue=self.account-value*self.market.get_value(self.symbol2column[key])
             if transvalue>0:  #budget constraint
                 if (value<0 and self.portfolio[key]>=np.abs(value)) or value>=0:  #I can only sell what I have
                     self.portfolio[key]=self.portfolio[key]+value
-                    self.account=self.account-value*self.market.get_value(key)
+                    self.account=self.account-value*self.market.get_value(self.symbol2column[key])
 
         # calculate reward
         #TODO: penalize agent for trying to go over the budget constraints
         reward += self.get_reward()
 
         # construct next state
-        next_state = np.concatenate([[self.market.get_last_values(self.symbol,self.timewindow)],\
-                             [self.market.get_last_values('US_rate',self.timewindow)],\
+        next_state = np.concatenate([self.market.get_last_values(self.symbol2column[self.symbol],self.timewindow),\
+                             self.market.get_last_values('US_rate',self.timewindow),\
                                 [self.portfolio[self.symbol]],\
                                 [self.account]])
         return next_state, reward, done
@@ -92,7 +93,7 @@ class Task():
         self.market.reset()
         #state reset
         dfzero = np.zeros(self.timewindow)
-        state = np.concatenate([dfzero], [dfzero], [0], [self.start_budget])
+        state = np.concatenate([dfzero, dfzero, [0], [self.start_budget]])
         # portfolio reset
         self.portfolio = {x: 0.0 for x in self.stocks}
         # bank account reset

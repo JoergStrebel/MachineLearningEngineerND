@@ -29,15 +29,28 @@ class BAH_Agent():
         self.monthly_allocation = monthly_allocation
 
         self.task_test = task_test
+        self.testflag=False
 
         # internal agent state not needed
 
         # Episode variables
         self.last_state = self.task.reset()
 
-    def reset_episode(self):
-        state = self.task.reset()
-        self.last_state = state
+    def reset_episode(self, testflag = False):
+        self.testflag=testflag
+        if testflag:
+            self.task = self.task_test
+            state = self.task.reset()
+            self.last_state = state
+            self.state_size = self.task.state_size
+            self.action_size = self.task.action_size
+            self.action_low = self.task.action_low
+            self.action_high = self.task.action_high
+            self.action_range = self.action_high - self.action_low
+            self.symbol = self.task.symbol
+        else:
+            state = self.task.reset()
+            self.last_state = state
         return state
 
     def step(self, action, reward, next_state, done):
@@ -51,7 +64,7 @@ class BAH_Agent():
         # Roll over last state and action
         self.last_state = next_state
 
-    def act(self, state, testflag):
+    def act(self, state):
         """
         Choose action based on given state and policy
         Returns actions for given state(s) as per current policy.
@@ -62,10 +75,7 @@ class BAH_Agent():
         1. Check if it is the first of the month
         2. If yes, buy a fixed amount of shares
         """
-        if testflag:
-            taskenv = self.task_test
-        else:
-            taskenv = self.task
+        taskenv = self.task
         action = {}
         if taskenv.get_monthstart():
             # get current prices
