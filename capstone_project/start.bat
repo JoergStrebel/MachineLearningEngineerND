@@ -1,3 +1,0 @@
-conda activate deeprlagent
-cd daten\udacity\MachineLearningEngineerND\capstone_project
-jupyter notebook

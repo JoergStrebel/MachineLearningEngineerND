@@ -8,7 +8,7 @@ import keras
 
 class DeepRL_Agent():
     """Reinforcement Learning agent that learns using DDPG."""
-    def __init__(self, task_train: Task, task_test: Task,  monthly_allocation: dict):
+    def __init__(self, task_train: Task, task_test: Task):
         # the constructor does not return any value
         # Task (environment) information
         self.task = task_train
@@ -19,7 +19,6 @@ class DeepRL_Agent():
         self.action_range = self.action_high - self.action_low
 
         self.symbol = self.task.symbol
-        self.monthly_allocation = monthly_allocation
 
         self.task_test = task_test
         self.testflag = False
@@ -43,7 +42,7 @@ class DeepRL_Agent():
         self.noise = OUNoise(self.action_size, self.exploration_mu, self.exploration_theta, self.exploration_sigma)
 
         # Replay memory
-        self.buffer_size = 1000000
+        self.buffer_size = 100000
         self.batch_size = 64
         self.memory = ReplayBuffer(self.buffer_size, self.batch_size)
 
@@ -89,16 +88,18 @@ class DeepRL_Agent():
         # Roll over last state and action
         self.last_state = next_state
 
-    def act(self, state):
+    def act(self, state, testflag = False):
         """
         Returns actions for given state(s) as per current policy.
+        returns dictionary symbol:transaction volume
         """
         state = np.reshape(state, [-1, self.state_size])
         action = self.actor_local.model.predict(state)[0]
-        learned_action=action + self.noise.sample() # add some noise for exploration
-        min_action=np.ones(learned_action.shape)*0.01
-        #return list(np.maximum(learned_action,min_action))  # make sure we have >0 rotor speed values
-        return list(action + self.noise.sample())  # add some noise for exploration
+        if testflag:
+            return list(action)
+        else:
+            learned_action=action + self.noise.sample() # add some noise for exploration
+            return list(learned_action)  # add some noise for exploration
 
 
     def learn(self, experiences):

@@ -40,4 +40,13 @@ class Market:
         return self.marketdata.iloc[self.currentdate][column]
 
     def get_last_values(self, column, no):
-        return self.marketdata[column][self.currentdate-no:self.currentdate]
+        """
+        Gets the "no" last values from the market data frame in a certain column
+        :param column:
+        :param no: number of values
+        :return: Series with values
+        """
+        if self.currentdate-no<0:
+            return np.concatenate([np.zeros(no-self.currentdate), self.marketdata[column][0:self.currentdate]])
+        else:
+            return self.marketdata[column][self.currentdate-no:self.currentdate]

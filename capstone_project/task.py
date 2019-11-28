@@ -14,74 +14,114 @@ class Task():
     array with the stock prices, the budget and the number of shares per ETF.
     xt = [p1t-M, ..., p1t, r1t-M, ..., r1t, No. of shares in t, Budget in t]
     """
-    def __init__(self, oMarkt: Market, cons_mon_budget: float, starting_budget: float, stocks: list, symbol):
+    def __init__(self, oMarkt: Market, cons_mon_budget: float, starting_budget: float, stocks: list, symbol:str,
+                 tcost:float, penalty:float):
         """Initialize a Task object.
         Params
         ======
         oMarkt: the market data
         cons_mon_budget: value of budget constraint
         starting_budget
+        stocks: list of all ETFs
+        symbol: ETF that is traded right now
+        tcost: transaction cost , i.e. absolute € fee per transaction
         """
         # Market
         self.market = oMarkt
-        self.account = starting_budget
+        self.account = starting_budget  # the bank account
         self.start_budget = starting_budget
         self.cons_month_budget = cons_mon_budget
+        self.month_account = cons_mon_budget
+
         self.rewardscale = 0.00005
         self.symbol = symbol
         self.timewindow = 10  # length of time window for the historic data
         self.symbol2column = {'SP500':'SP500_price', 'ESTOXX':'ESTOXX_price', 'MSCI':'MSCI_price'}
+        self.index2symbol = ['SP500', 'ESTOXX','MSCI']
 
         dfzero = np.zeros(self.timewindow)
-        state = np.concatenate([dfzero, dfzero, [0], [self.start_budget]])
+        state = np.concatenate([dfzero, dfzero, [0.0 , 0.0, 0.0], [self.start_budget]])
 
         self.state_size = len(state)
-        self.action_low = -1.0*starting_budget/np.mean(oMarkt.marketdata[self.symbol2column[symbol]])  #maximum no of shares that can be bought
+
+        # maximum no of shares that can be bought per month per ETF
+        # ESTOXX as it is the most expensive one
+        self.action_low = -1.0*cons_mon_budget/np.mean(oMarkt.marketdata[self.symbol2column['ESTOXX']])
         self.action_high = -1.0*self.action_low
-        self.action_size = 1
+        self.action_size = len(self.index2symbol)
 
         self.stocks=stocks
         self.portfolio = {x: 0.0 for x in stocks} # dictionary with key:value pairs for the portfolio positions
+        self.transaction_cost=tcost
+        self.penalty=penalty
 
-    def get_reward(self):
+    def get_reward(self, penalties = 0.0, tcosts = 0.0):
         """
         Uses current portfolio to calculate and return total portfolio value for the current time slot.
         """
-        totalvalue = 0.0
-
-        for key,value in self.portfolio.items():
-            totalvalue=totalvalue + value*self.market.get_value(self.symbol2column[key])
-
-        totalvalue = totalvalue + self.account - self.start_budget
+        totalvalue = self.get_total_value()
+        totalvalue = totalvalue - self.start_budget + penalties + tcosts
         reward = np.tanh(self.rewardscale*totalvalue)
         return reward
 
-    def step(self, transactions: dict):
+    def step(self, transactions: list):
         """
         the transactions come out of the agent.act() function
         Uses action to obtain next state, reward, done.
-        transactions are a dict with the ticker names and the shares to buy or sell
+        transactions are a list with the the shares to buy or sell
+        order: ['SP500', 'ESTOXX', 'MSCI']
         """
         reward = 0
-        done = self.market.next_timestep()  # no need to pass transactions to market as they do not impact it
+        penalties = 0.0
+
+        if self.get_monthstart():
+            self.month_account = self.cons_month_budget
+
+        # transaction costs are incurred if the transaction is submitted to the task environment
+        tcosts=len([x for x in transactions if x>0.0])*self.transaction_cost
+
+        # verify transactions
+        # you can only sell what I have
+        for i in range(len(transactions)):
+            volume=float(transactions[i])
+            if volume<0.0:  #sell
+                if abs(volume)>self.portfolio[self.index2symbol[i]]:
+                    transactions[i] = -self.portfolio[self.index2symbol[i]]
+                    penalties = penalties + self.penalty
+
+        # you can only do what fits in the overall budget
+        transvalue = 0.0
+        for i in range(len(transactions)):
+            volume=float(transactions[i])
+            price=float(self.market.get_value(self.symbol2column[self.index2symbol[i]]))
+            transvalue = transvalue + float(volume*price)
+
+        # check for overall account
+        if self.account<transvalue:
+            transactions = [0.0, 0.0, 0.0]  #if the budget constraint is not fulfilled, then nothing happens
+            penalties = penalties + self.penalty
+
+        # check for monthly budget constraint
+        if  self.month_account<transvalue:
+            transactions = [0.0, 0.0, 0.0]  #if the budget constraint is not fulfilled, then nothing happens
+            penalties = penalties + self.penalty
 
         # execute the transactions and change the portfolio
-        for key,value in transactions.items():
-            transvalue=self.account-value*self.market.get_value(self.symbol2column[key])
-            if transvalue>0:  #budget constraint
-                if (value<0 and self.portfolio[key]>=np.abs(value)) or value>=0:  #I can only sell what I have
-                    self.portfolio[key]=self.portfolio[key]+value
-                    self.account=self.account-value*self.market.get_value(self.symbol2column[key])
+        for i in range(len(transactions)):
+            volume=float(transactions[i])
+            price=float(self.market.get_value(self.symbol2column[self.index2symbol[i]]))
+            tvalue = float(volume*price)
+            self.portfolio[self.index2symbol[i]]=self.portfolio[self.index2symbol[i]]+transactions[i]
+            self.account=self.account-tvalue
+            self.month_account=self.month_account-tvalue
 
-        # calculate reward
-        #TODO: penalize agent for trying to go over the budget constraints
-        reward += self.get_reward()
+        reward = self.get_reward(penalties, tcosts)
+        done = self.market.next_timestep()  # no need to pass transactions to market as they do not impact it
 
         # construct next state
-        next_state = np.concatenate([self.market.get_last_values(self.symbol2column[self.symbol],self.timewindow),\
-                             self.market.get_last_values('US_rate',self.timewindow),\
-                                [self.portfolio[self.symbol]],\
-                                [self.account]])
+        prices = self.market.get_last_values(self.symbol2column[self.symbol],self.timewindow)
+        rates = self.market.get_last_values('US_rate',self.timewindow)
+        next_state = np.concatenate([prices, rates, [self.portfolio[x] for x in self.index2symbol],[self.account]])
         return next_state, reward, done
 
     def reset(self):
@@ -93,12 +133,23 @@ class Task():
         self.market.reset()
         #state reset
         dfzero = np.zeros(self.timewindow)
-        state = np.concatenate([dfzero, dfzero, [0], [self.start_budget]])
+        state = np.concatenate([dfzero, dfzero, [0.0, 0.0, 0.0], [self.start_budget]])
         # portfolio reset
         self.portfolio = {x: 0.0 for x in self.stocks}
         # bank account reset
         self.account = self.start_budget
+        self.month_account = self.cons_month_budget
         return state
 
     def get_monthstart(self):
         return self.market.get_value('monthstart')
+
+    def get_total_value(self):
+        """
+        Returns the total value of the customer, i.e. portfolio value and account value
+        :return: value of portfolio in Euro
+        """
+        totalvalue = 0.0
+        for key,value in self.portfolio.items():
+            totalvalue = totalvalue + float(value)*float(self.market.get_value(self.symbol2column[key]))
+        return totalvalue + self.account

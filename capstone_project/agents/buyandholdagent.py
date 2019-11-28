@@ -8,9 +8,8 @@ class BAH_Agent():
     Financial Modeling: ./capstone_project/resources/optimal_trading_strategy.ods"
     The approach to validation is as follows: there are two tasks, one for training and one for validation. Both tasks
     are handed over to the agent and parameter switches control which task environment is used by the agent
-
     """
-    def __init__(self, task_train: Task, task_test: Task,  monthly_allocation: dict):
+    def __init__(self, task_train: Task, task_test: Task,  monthly_action: dict):
         """
         :param task_train: task environment with training data
         :param task_validate: task environment with test data
@@ -26,7 +25,7 @@ class BAH_Agent():
         self.action_high = self.task.action_high
         self.action_range = self.action_high - self.action_low
         self.symbol = self.task.symbol
-        self.monthly_allocation = monthly_allocation
+        self.monthly_action = monthly_action
 
         self.task_test = task_test
         self.testflag=False
@@ -76,15 +75,18 @@ class BAH_Agent():
         2. If yes, buy a fixed amount of shares
         """
         taskenv = self.task
-        action = {}
+        action = []
         if taskenv.get_monthstart():
-            # get current prices
-            for key,value in self.monthly_allocation.items():
-                current_price = taskenv.market.get_value(key+'_price')
-                action[key] = value/current_price
+            for refkey in ['SP500', 'ESTOXX', 'MSCI']:
+                if refkey in self.monthly_action.keys():
+                    value = float(self.monthly_action[refkey])
+                else:
+                    value=0.0
+                current_price = float(taskenv.market.get_value(refkey+'_price'))
+                action.append(value/current_price)
         else:
-            for key,value in self.monthly_allocation.items():
-                action[key] = 0.0
+            for refkey in ['SP500', 'ESTOXX', 'MSCI']:
+                action.append(0.0)
         return action
 
     def learn(self, experiences):

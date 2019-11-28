@@ -6,7 +6,7 @@ In this project, an agent learns to make buying and selling decisions using a re
 
 ## Project Instructions
 
-1. Create and activate a new environment.
+1. Create and activate a new environment (in Linux).
 
 ```
 conda env create -f capstone_project_deeprlagent.yaml
@@ -20,6 +20,7 @@ python -m ipykernel install --user --name deeprlagent --display-name "deeprlagen
 
 4. Open the notebook.
 ```
+cd <project directory>
 jupyter notebook deeprlagent_project.ipynb
 ```
 
@@ -27,4 +28,4 @@ jupyter notebook deeprlagent_project.ipynb
 
 6. The needed conda packages to complete this project are documented in the `capstone_project_deeprlagent.yaml` file in the repository.
 
-7. Data acquisition: TODO
+7. Data acquisition: please see the report and the Jupyter notebook fo details.
