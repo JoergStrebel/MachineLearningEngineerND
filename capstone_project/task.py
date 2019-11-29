@@ -36,18 +36,21 @@ class Task():
         self.rewardscale = 0.00005
         self.symbol = symbol
         self.timewindow = 10  # length of time window for the historic data
-        self.symbol2column = {'SP500':'SP500_price', 'ESTOXX':'ESTOXX_price', 'MSCI':'MSCI_price'}
-        self.index2symbol = ['SP500', 'ESTOXX','MSCI']
+        self.symbol2column = {'SP500':'SP500_price'}
+        self.index2symbol = ['SP500']  # list of ETFs traded by the agents
 
-        dfzero = np.zeros(self.timewindow)
-        state = np.concatenate([dfzero, dfzero, [0.0 , 0.0, 0.0], [self.start_budget]])
+        self.dfzero = np.zeros(self.timewindow)
+        self.action_zero = np.zeros(len(self.index2symbol))
+        state = np.concatenate([self.dfzero, self.dfzero, self.action_zero, [self.start_budget], [self.cons_month_budget]])
 
         self.state_size = len(state)
 
         # maximum no of shares that can be bought per month per ETF
-        # ESTOXX as it is the most expensive one
-        self.action_low = -1.0*cons_mon_budget/np.mean(oMarkt.marketdata[self.symbol2column['ESTOXX']])
-        self.action_high = -1.0*self.action_low
+        # SP500 as it is the only traded ETF
+        # the low/high action is a bit reduced by 0.98 to avoid hitting the budget limits due to floating point
+        # inaccuracies
+        self.action_low = -0.98*cons_mon_budget/np.max(oMarkt.marketdata[self.symbol2column['SP500']])
+        self.action_high = -0.98*self.action_low
         self.action_size = len(self.index2symbol)
 
         self.stocks=stocks
@@ -98,12 +101,12 @@ class Task():
 
         # check for overall account
         if self.account<transvalue:
-            transactions = [0.0, 0.0, 0.0]  #if the budget constraint is not fulfilled, then nothing happens
+            transactions = self.action_zero  #if the budget constraint is not fulfilled, then nothing happens
             penalties = penalties + self.penalty
 
         # check for monthly budget constraint
         if  self.month_account<transvalue:
-            transactions = [0.0, 0.0, 0.0]  #if the budget constraint is not fulfilled, then nothing happens
+            transactions = self.action_zero  #if the budget constraint is not fulfilled, then nothing happens
             penalties = penalties + self.penalty
 
         # execute the transactions and change the portfolio
@@ -121,7 +124,8 @@ class Task():
         # construct next state
         prices = self.market.get_last_values(self.symbol2column[self.symbol],self.timewindow)
         rates = self.market.get_last_values('US_rate',self.timewindow)
-        next_state = np.concatenate([prices, rates, [self.portfolio[x] for x in self.index2symbol],[self.account]])
+        next_state = np.concatenate([prices, rates, [self.portfolio[x] for x in self.index2symbol],[self.account],
+                                     [self.month_account]])
         return next_state, reward, done
 
     def reset(self):
@@ -133,7 +137,7 @@ class Task():
         self.market.reset()
         #state reset
         dfzero = np.zeros(self.timewindow)
-        state = np.concatenate([dfzero, dfzero, [0.0, 0.0, 0.0], [self.start_budget]])
+        state = np.concatenate([dfzero, dfzero, self.action_zero, [self.start_budget], [self.cons_month_budget]])
         # portfolio reset
         self.portfolio = {x: 0.0 for x in self.stocks}
         # bank account reset

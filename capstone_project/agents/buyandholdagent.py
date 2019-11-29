@@ -77,7 +77,7 @@ class BAH_Agent():
         taskenv = self.task
         action = []
         if taskenv.get_monthstart():
-            for refkey in ['SP500', 'ESTOXX', 'MSCI']:
+            for refkey in self.task.index2symbol:
                 if refkey in self.monthly_action.keys():
                     value = float(self.monthly_action[refkey])
                 else:
@@ -85,7 +85,7 @@ class BAH_Agent():
                 current_price = float(taskenv.market.get_value(refkey+'_price'))
                 action.append(value/current_price)
         else:
-            for refkey in ['SP500', 'ESTOXX', 'MSCI']:
+            for refkey in self.task.index2symbol:
                 action.append(0.0)
         return action
 
