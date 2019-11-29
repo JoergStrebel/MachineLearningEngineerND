@@ -12,7 +12,7 @@ class Task():
     The task also creates and tracks the state. THe state is defined according to
     https://teddykoker.com/2019/06/trading-with-reinforcement-learning-in-python-part-ii-application/ as a numpy
     array with the stock prices, the budget and the number of shares per ETF.
-    xt = [p1t-M, ..., p1t, r1t-M, ..., r1t, No. of shares in t, Budget in t]
+    xt = [p1t-M, ..., p1t, r1t-M, ..., r1t, No. of shares in t, Budget available in t, Monthly Budget available in t]
     """
     def __init__(self, oMarkt: Market, cons_mon_budget: float, starting_budget: float, stocks: list, symbol:str,
                  tcost:float, penalty:float):
