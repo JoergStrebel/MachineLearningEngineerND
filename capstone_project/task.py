@@ -13,6 +13,9 @@ class Task():
     https://teddykoker.com/2019/06/trading-with-reinforcement-learning-in-python-part-ii-application/ as a numpy
     array with the stock prices, the budget and the number of shares per ETF.
     xt = [p1t-M, ..., p1t, r1t-M, ..., r1t, No. of shares in t, Budget available in t, Monthly Budget available in t]
+    TODO: right now, I have the accumulated added value up to this point as a reward signal. I should try to only give
+    the added value compared to the beginning of the time window. The reward signal should be the change in total value
+    (i.e. the value change associated with the action)
     """
     def __init__(self, oMarkt: Market, cons_mon_budget: float, starting_budget: float, stocks: list, symbol:str,
                  tcost:float, penalty:float):

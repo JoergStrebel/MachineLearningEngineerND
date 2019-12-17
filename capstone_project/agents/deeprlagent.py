@@ -92,6 +92,8 @@ class DeepRL_Agent():
         """
         Returns actions for given state(s) as per current policy.
         returns dictionary symbol:transaction volume
+        TODO: action+noise have to be in the [low, high] interval of permissible actions (otherwise, the agent only
+        earns penalties while exploring)
         """
         state = np.reshape(state, [-1, self.state_size])
         action = self.actor_local.model.predict(state)[0]
