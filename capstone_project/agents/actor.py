@@ -2,8 +2,8 @@ import keras
 from keras import layers, models, optimizers
 from keras import backend as K
 import tensorflow as tf
-from keras.layers import Dropout
-from keras.layers import BatchNormalization
+#from keras.layers import Dropout
+#from keras.layers import BatchNormalization
 from keras import regularizers
 
 class Actor:

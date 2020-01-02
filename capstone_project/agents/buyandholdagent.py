@@ -1,5 +1,3 @@
-import numpy as np
-import keras
 from task import Task
 
 class BAH_Agent():

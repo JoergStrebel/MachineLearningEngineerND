@@ -4,7 +4,6 @@ from agents.critic import Critic
 from agents.replay import ReplayBuffer
 from agents.OUNoise import OUNoise
 from task import Task
-import keras
 
 class DeepRL_Agent():
     """Reinforcement Learning agent that learns using DDPG."""
@@ -92,15 +91,15 @@ class DeepRL_Agent():
         """
         Returns actions for given state(s) as per current policy.
         returns dictionary symbol:transaction volume
-        TODO: action+noise have to be in the [low, high] interval of permissible actions (otherwise, the agent only
-        earns penalties while exploring)
         """
         state = np.reshape(state, [-1, self.state_size])
         action = self.actor_local.model.predict(state)[0]
         if testflag:
             return list(action)
         else:
-            learned_action=action + self.noise.sample() # add some noise for exploration
+            learned_action=np.add(action, self.noise.sample()) # add some noise for exploration
+            learned_action = np.minimum(learned_action, self.action_high)
+            learned_action = np.maximum(learned_action, self.action_low)
             return list(learned_action)  # add some noise for exploration
 
 
