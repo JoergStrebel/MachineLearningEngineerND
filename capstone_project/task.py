@@ -57,6 +57,7 @@ class Task():
         self.portfolio = {x: 0.0 for x in stocks} # dictionary with key:value pairs for the portfolio positions
         self.transaction_cost=tcost
         self.penalty=penalty
+        self.epsilonlimit = 0.001
 
     def get_reward(self, penalties = 0.0, tcosts = 0.0):
         """
@@ -79,7 +80,10 @@ class Task():
 
         if self.get_monthstart():
             self.month_account = self.cons_month_budget
-
+        
+        # set values close to 0 to exactly 0 to avoid numeric instabilities
+        transactions = [float(0.0) if abs(x)<self.epsilonlimit else x for x in transactions]
+        
         # transaction costs are incurred if the transaction is submitted to the task environment
         tcosts=len([x for x in transactions if x>0.0])*self.transaction_cost
 
